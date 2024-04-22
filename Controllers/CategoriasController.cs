@@ -103,8 +103,7 @@ namespace APICatalogo.Controllers
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
-        {
-            //primeiron eu crio uma variavel categoria, 
+        { 
             var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
 
             if (categoria == null)
