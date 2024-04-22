@@ -30,48 +30,23 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public async Task<ActionResult<IEnumerable<Produto>>> Get()
         {
-
-            try
-            {
-                var produtos = _context.Produtos.AsNoTracking().ToList();
-
-                if (produtos is null)
-                {
-                    return NotFound("Produtos não encontrados");
-                }
-                return produtos;
-            }
-            catch (Exception)
-            {
-
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro ao tratar a sua solicitação");
-            }
-            
+            return await _context.Produtos.ToListAsync();
         }
 
         [HttpGet("{id:int}", Name="ObterProduto")]
-        public ActionResult<Produto> Get(int id)
+        public async Task<ActionResult<Produto>> Get(int id)
         {
-            try
-            {
-                var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
-                if (produto is null)
-                {
-                    return NotFound("Produto não encontrado");
-                }
-                return produto;
-            }
-            catch (Exception)
-            {
+            var produto = await _context.Produtos.AsNoTracking()
+                .FirstOrDefaultAsync(p => p.ProdutoId == id);
 
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um erro ao tratar a sua solicitação");
+            if (produto == null)
+            {
+                return NotFound();
             }
 
-            
+            return produto;
         }
 
         [HttpPost]
