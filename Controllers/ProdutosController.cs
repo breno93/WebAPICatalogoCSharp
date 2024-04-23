@@ -48,7 +48,7 @@ namespace APICatalogo.Controllers
 
             return produto;
         }
-
+        //Testando commit
         [HttpPost]
         public ActionResult Post(Produto produto)
         {
