@@ -1,5 +1,6 @@
 ﻿using APICatalogo.Context;
 using APICatalogo.Models;
+using APICatalogo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,23 @@ namespace APICatalogo.Controllers
         {
             _context = context;
         }
+
+        //com FromServices
+        [HttpGet("UsandoFromServices/{nome}")]
+        public ActionResult<string> GetSaudacaoFromService([FromServices] IMeuServico
+            meuServico, string nome)
+        {
+            return meuServico.Saudacao(nome);
+        }
+
+        //Sem FromServices
+        [HttpGet("UsandoSemFromServices/{nome}")]
+        public ActionResult<string> GetSaudacaoSemFromService(IMeuServico
+            meuServico, string nome)
+        {
+            return meuServico.Saudacao(nome);
+        }
+
 
         [HttpGet("produtos")]
         public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
