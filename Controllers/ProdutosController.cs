@@ -51,11 +51,11 @@ namespace APICatalogo.Controllers
         }
         //Testando commit
         [HttpPost]
-        public ActionResult Post(Produto produto)
+        public ActionResult Post([FromBody]Produto produto)
         {
-            if (produto is null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Dados inválidos");
+                return BadRequest(ModelState);
             }
 
             //Aqui eu estou adicionando o produto
