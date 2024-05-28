@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using APICatalogo.Validations;
+using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -6,7 +8,7 @@ namespace APICatalogo.Models;
 
 
 [Table("Produtos")]
-    public class Produto
+    public class Produto : IValidatableObject
     {
         [Key]
         public int ProdutoId { get; set; }
@@ -14,10 +16,11 @@ namespace APICatalogo.Models;
         [Required(ErrorMessage ="O nome é obrigatório")]
         [StringLength(20, ErrorMessage ="O nome deve ter entre 5 e 20 caracteres",
         MinimumLength = 5)]
+        //[PrimeiraLetraMaiuscula]
         public string? Nome { get; set; }
 
         [Required]
-        [StringLength(10, ErrorMessage = "A descrição deve ter no maximo {1} caracteres")]
+        [StringLength(50, ErrorMessage = "A descrição deve ter no maximo {1} caracteres")]
         public string? Descricao { get; set; }
 
         [Required]
@@ -33,6 +36,36 @@ namespace APICatalogo.Models;
 
         [JsonIgnore]
         public Categoria? Categoria { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (!string.IsNullOrEmpty(this.Nome)) 
+        {
+            var primeiraletra = this.Nome[0].ToString();
+            if (primeiraletra != primeiraletra.ToUpper())
+            {
+                yield return new 
+                    ValidationResult("A primeira letra do produto deve ser maiúscula",
+                    new[]
+                    {
+                        nameof(this.Nome)
+                    }
+                    );
+                    
+            }
+        }
+
+        if(this.Estoque <= 0)
+        {
+            yield return new
+                    ValidationResult("O estoque deve ser maior que zero",
+                    new[]
+                    {
+                        nameof(this.Estoque)
+                    }
+                    );
+        }
     }
+}
 
 
