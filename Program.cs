@@ -1,4 +1,5 @@
 using APICatalogo.Context;
+using APICatalogo.Extentions;
 using APICatalogo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 //Aqui eu estou colocando os dados de conexão que fiz no appsettings.json
 string mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
                                options.UseMySql(mySqlConnection,
@@ -37,12 +39,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ConfigureExceptionHandler();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
